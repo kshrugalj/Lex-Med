@@ -50,54 +50,8 @@ pip install pytesseract mupdf
 3. The extracted text files will be saved in the `output_txt/` directory with the same base name as the input PDF.
 
 ## Code Example
-Here is the main script for processing PDF files:
+Refer to main.py
 
-```python
-import os
-import pytesseract
-import fitz  # MuPDF
-
-# Directories
-input_dir = "input_pdfs"
-output_dir = "output_txt"
-os.makedirs(output_dir, exist_ok=True)
-
-def extract_text_from_pdf(pdf_path):
-    """Extracts text from a PDF file using OCR."""
-    with fitz.open(pdf_path) as pdf:
-        text = ""
-        for page_num, page in enumerate(pdf):
-            pix = page.get_pixmap()  # Render page to an image
-            image_path = f"temp_page_{page_num}.png"
-            pix.save(image_path)
-
-            # Perform OCR on the image
-            text += pytesseract.image_to_string(image_path) + "\n"
-
-            # Cleanup temporary image
-            os.remove(image_path)
-
-        return text
-
-def process_pdfs():
-    """Process all PDFs in the input directory."""
-    for file_name in os.listdir(input_dir):
-        if file_name.lower().endswith(".pdf"):
-            pdf_path = os.path.join(input_dir, file_name)
-            print(f"Processing {file_name}...")
-
-            text = extract_text_from_pdf(pdf_path)
-
-            # Save extracted text to a .txt file
-            output_path = os.path.join(output_dir, file_name.replace(".pdf", ".txt"))
-            with open(output_path, "w", encoding="utf-8") as text_file:
-                text_file.write(text)
-
-            print(f"Saved extracted text to {output_path}")
-
-if __name__ == "__main__":
-    process_pdfs()
-```
 
 ## Directory Structure
 ```
